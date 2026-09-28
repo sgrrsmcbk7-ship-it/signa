@@ -69,6 +69,41 @@ function HandGlyphBase({ gesture, size = 96, marks = null, className = '' }) {
     marks?.[name] === 'bad' ? 'var(--err)' : marks?.[name] === 'good' ? 'var(--ok)' : 'var(--glyph)';
   const motion = gesture?.motion?.type;
 
+  // 🤌 EAT: all fingertips gathered onto the thumb — each finger outlined so they stay distinct.
+  if (pinch) {
+    const tip = { x: 50, y: 17 };
+    const fingers = [
+      ['index', 'M37,56 C31,40 38,24 48,18'],
+      ['middle', 'M46,53 C43,38 45,25 49,17'],
+      ['ring', 'M55,54 C57,39 55,26 51,18'],
+      ['pinky', 'M63,58 C68,44 62,28 53,20'],
+    ];
+    const stroke = (d, name, w) => (
+      <g key={name}>
+        <path d={d} stroke="var(--bg-2)" strokeWidth={w + 3} />
+        <path d={d} stroke={color(name)} strokeWidth={w} />
+      </g>
+    );
+    return (
+      <svg
+        className={`hand-glyph ${className}`}
+        width={size}
+        height={size}
+        viewBox="0 0 100 100"
+        role="img"
+        aria-label={gesture?.phrase?.en ?? 'hand'}
+      >
+        <g strokeLinecap="round" fill="none">
+          <rect x="36" y="86" width="28" height="11" rx="5" fill="var(--glyph)" opacity="0.7" />
+          <rect x="31" y="50" width="38" height="40" rx="13" fill="var(--glyph)" />
+          {fingers.map(([name, d]) => stroke(d, name, name === 'pinky' ? 7 : 8))}
+          {stroke('M33,78 C20,62 30,34 46,22', 'thumb', 10.5)}
+          <circle cx={tip.x} cy={tip.y + 1} r="7.5" stroke="var(--accent)" strokeWidth="2.2" />
+        </g>
+      </svg>
+    );
+  }
+
   // 👍 / 👎: a fist seen from the side with a big thumb — the generic front view is ambiguous.
   if (thumbDir === 'up' || thumbDir === 'down') {
     return (
