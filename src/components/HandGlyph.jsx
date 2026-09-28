@@ -69,6 +69,40 @@ function HandGlyphBase({ gesture, size = 96, marks = null, className = '' }) {
     marks?.[name] === 'bad' ? 'var(--err)' : marks?.[name] === 'good' ? 'var(--ok)' : 'var(--glyph)';
   const motion = gesture?.motion?.type;
 
+  // 👍 / 👎: a fist seen from the side with a big thumb — the generic front view is ambiguous.
+  if (thumbDir === 'up' || thumbDir === 'down') {
+    return (
+      <svg
+        className={`hand-glyph ${className}`}
+        width={size}
+        height={size}
+        viewBox="0 0 100 100"
+        role="img"
+        aria-label={gesture?.phrase?.en ?? 'hand'}
+      >
+        <g transform={`rotate(${thumbDir === 'down' ? 180 : 0} 50 55)`} strokeLinecap="round">
+          <rect x="30" y="86" width="26" height="11" rx="5" fill="var(--glyph)" opacity="0.7" />
+          <rect x="22" y="40" width="44" height="50" rx="15" fill="var(--glyph)" />
+          {['index', 'middle', 'ring', 'pinky'].map((name, i) => (
+            <rect
+              key={name}
+              x="44"
+              y={41 + i * 12}
+              width={i === 3 ? 30 : 36}
+              height="11.5"
+              rx="5.7"
+              fill={color(name)}
+              stroke="var(--bg-2)"
+              strokeWidth="1.8"
+            />
+          ))}
+          <path d="M34,48 Q32,30 36,16" stroke={color('thumb')} strokeWidth="19" />
+          <ellipse cx="37.5" cy="15" rx="4.6" ry="4" fill="var(--glyph-nail)" />
+        </g>
+      </svg>
+    );
+  }
+
   return (
     <svg
       className={`hand-glyph ${className}`}
@@ -98,8 +132,11 @@ function HandGlyphBase({ gesture, size = 96, marks = null, className = '' }) {
         <path
           d={`M${THUMB_BASE.x},${THUMB_BASE.y} Q${(THUMB_BASE.x + thumbEnd.x) / 2 - 3},${(THUMB_BASE.y + thumbEnd.y) / 2 + 2} ${thumbEnd.x},${thumbEnd.y}`}
           stroke={color('thumb')}
-          strokeWidth="9"
+          strokeWidth="11.5"
         />
+        {thumbState === 'extended' && !okSign && !pinch && (
+          <circle cx={thumbEnd.x} cy={thumbEnd.y} r="2.4" fill="var(--glyph-nail)" />
+        )}
         {(okSign || pinch) && <circle cx={thumbEnd.x + 1} cy={thumbEnd.y - 2} r="5" stroke="var(--accent)" strokeWidth="2" />}
       </g>
       {motion === 'wave' && (
