@@ -4,6 +4,10 @@
 
 Built for **ADMIT HACKATHON — MOTION: "Camera instead of a joystick"**.
 
+### ▶ Live demo: **https://sgrrsmcbk7-ship-it.github.io/signa/**
+
+Open in Chrome / Edge / Safari → *Start talking* → allow the camera → show a sign.
+
 ---
 
 ## Problem
@@ -206,7 +210,7 @@ It's a static site, so any static host works (HTTPS is required for the camera; 
 
 **Netlify**: *Add new site → Import from Git* (`netlify.toml` is included), or drag-and-drop the `dist/` folder.
 
-**GitHub Pages**: set `base: '/<repo>/'` in `vite.config.js`, build, and publish `dist/`.
+**GitHub Pages** (used for the live demo): `npm run deploy:pages` builds with `BASE_PATH=/<repo>/` and force-pushes `dist/` to the `gh-pages` branch (needs `gh auth login`). Enable Pages → *Deploy from branch* → `gh-pages` once.
 
 ## Privacy
 
